@@ -1,8 +1,8 @@
 #$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#
 #               ~Custom Password Generator~
 #                     Console Version    
-#     Developed By: DeadAnarch1st and SweetBerry Software
-#     Last Update: April 10th 2021
+#     Developed By: Stat1cNull and SweetBerry Software
+#     Last Update: May 4th 2021
 #$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#$&#
 import random
 import os
@@ -11,6 +11,7 @@ uppercase = 0
 lowercase = 0
 numbers = 0
 available = 0
+location = 0
 length = 0
 special = []#Array for special chars
 numchars = 0
@@ -46,7 +47,6 @@ def random_password_gen(uppercase, lowercase, numbers, numchars):
     password += special[b]
   final = list(password)
   random.shuffle(final)#Shuffle characters in password
-  print("Here is your Custom Random Passwords: ")
   print("".join(final))#Convert List back to string
 #Number and Random Password Generator
 def simple_pas_gen(chars, number_of_passwords, length, name: str):
@@ -135,6 +135,7 @@ def run_app():
         pass#Skip
     clear()
     #Show Random Password
+    print("Here is your Custom Random Passwords: ")
     for i in range(pass_num):
       random_password_gen(uppercase, lowercase, numbers, numchars)
     run_app()
@@ -148,6 +149,7 @@ def run_app():
     run_app()
   #Password with Familiar Word
   if settings == 2:
+    location = 0
     word = input("What word do you want to use for your password ?")
     #Check if the word is valid
     w_len = len(word)#Get length of the word
@@ -155,19 +157,51 @@ def run_app():
       while w_len < 3 or w_len > 15:
         word = input("Your word is invalid, please enter a word 3 to 15 characters long")
         w_len = len(word)
-    
+    available = w_len
     #Settings for the word
-    print("Length of the password: " + str(w_len)) 
     print("Password so far: " + word)
-    uppercase = int(input("How many characters you want to be uppercase ?"))
+    print("Length of the password: %s" % w_len) 
+    print("Available to change: %s" % available)
+    uppercase = check_int(uppercase, "How many characters you want to be uppercase ?")
     if uppercase > w_len:
       while uppercase > w_len:
         uppercase = int(input("Invalid number, enter number less than length of the word"))
+    available -= uppercase
     #APPLY UPPERCASE SETTINGS TO THE WORD-----------------------
-    print("Password so far: " + word)
+    #THIS CODE HAS BEEN VERY VERY BAD AND HAS BEEN MISBEHAVING DADDY$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    index = list()#index of letters to change
+    for x in range(uppercase):#Loop through chars and randomly pick ones to change
+      var = random.randint(0, w_len - 1)
+      index.append(var)#Pick random number and that number will be index of a char to change
+    chan_word = list(word)
+    for i in index:#Apply uppercase to the selected characters
+      chan_word[i] = chan_word[i].upper()
+    password = "".join(chan_word)#Convert from list back to string
+    #THIS CODE HAS BEEN VERY VERY BAD AND HAS BEEN MISBEHAVING DADDY###################################################################
+    clear()
+    print("Password so far: " + password)
+    print("Length of the password: %s" % w_len) 
+    print("Available to change: %s" % available)
+    print("Uppercase characters: %s " % uppercase)
+    numbers = check_int(numbers, "How many numbers would you like to add ?")
+    print("""
+      Where would you like to place numbers in the password:
+          #1 In the Front 
+          #2 In the Back
+          #3 In the Middle
+          #4 Randomly Over the Password
+          #5 Half in the Back, Half in the Front
+    """)
+    location = check_int(location, " ")
+    for x in range(numbers):
+      num = random.choice(num_chars)
+    nums = list(num)
+    #Apply Number Settings
+    if location == 1:#Front
+      password = password[:0] + nums[0] + password[0:]#Insert number in the word
+      print("Here is your password: " + password)
 
 run_app()
-    
 
 
 
