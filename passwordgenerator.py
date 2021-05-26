@@ -18,6 +18,7 @@ special = []  # Array for special chars
 numchars = 0
 pass_num = 0
 settings = 0
+mid = 0
 rand_chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890#$&*@!"
 num_chars = "1234567890"
 clear = lambda: os.system("cls")  # Clear out console
@@ -65,7 +66,13 @@ def simple_pas_gen(chars:str, number_of_passwords:int, length:int, name: str):
             password += random.choice(chars)
         print(password)
 
-
+#Find Middle of the element
+def middle(w_len):
+    global mid
+    mid = w_len / 2  # Find middle of the word
+    if w_len % 2 > 0:  # Check if length of the word is odd number
+        mid += 0.5
+    mid = int(mid)
 # Application
 def run_app():
     global uppercase, lowercase, numbers, numchars, settings, available, special, pass_num, length
@@ -204,28 +211,34 @@ def run_app():
         for x in range(numbers):
             num = random.choice(num_chars)
         nums = list(num)
-        num_length = len(num_chars)
+        num_length = len(nums)
         # Apply Number Settings
         if location == 1:  # Front
             for q in range(num_length):
-                changed = changed[:0] + num_chars[q] + changed[0:]  # Insert numbers on the 0th index
-            print("Here is your password: " + changed)
+                password = password[:0] + num_chars[q] + password[0:]  # Insert numbers on the 0th index
+            print("Here is your password: " + password)
         elif location == 2:  # Back
             for u in range(num_length):
-                changed = changed[:w_len] + num_chars[u] + changed[w_len:]
-            print("Here is your password: " + changed)
+                password = password[:w_len] + num_chars[u] + password[w_len:]
+            print("Here is your password: " + password)
         elif location == 3:  # Middle
-            mid = w_len / 2  # Find middle of the word
-            if w_len % 2 > 0:  # Check if length of the word is odd number
-                mid += 0.5
-            mid = int(mid)
+            middle(w_len)
             for y in range(num_length):
-                changed = changed[:mid] + num_chars[y] + changed[mid:]
-            print("Here is your password: " + changed)
+                password = password[:mid] + num_chars[y] + password[mid:]
+            print("Here is your password: " + password)
         elif location == 4:  # Randomly
-            print("Randomly")
+            for z in range(num_length):
+                rand = random.randint(0, w_len)  # Generate Random Position
+                password = password[:rand] + num_chars[z] + password[rand:]
+            print("Here is your password: " + password)
         elif location == 5:  # half
-            print("half")
+            middle(num_length)  # Find the middle number
+            for b in range(mid):  # Loop until hit middle number
+                password = password[:0] + num_chars[b] + password[0:]  # And place half in front
+            w_len = len(password)  # Update length of the word
+            for a in range(mid, num_length):  # Loop from middle to the end
+                password = password[:w_len] + num_chars[a] + password[w_len:]
+            print("Here is your password: " + password)
         elif location == 6:  # after
             print("after")
         elif location == 7:  # front
