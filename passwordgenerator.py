@@ -21,8 +21,7 @@ settings = 0
 mid = 0
 rand_chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890#$&*@!"
 number_chars = "1234567890"
-def clear(): return os.system("cls")  # Clear out console
-
+def clear(): return os.system("clear")  # Clear out console
 
 # Check if input is a number
 def check_int(var: int, prompt: str):
@@ -32,7 +31,6 @@ def check_int(var: int, prompt: str):
             return int(var)
             break
         print("Invalid Input, please enter a number")
-
 
 # Functions
 # Custom Random Password Generator
@@ -55,7 +53,6 @@ def random_password_gen(uppercase: int, lowercase: int, numbers: int, numchars: 
     random.shuffle(final)  # Shuffle characters in password
     print("".join(final))  # Convert List back to string
 
-
 # Number and Random Password Generator
 def simple_pas_gen(chars: str, number_of_passwords: int, length: int, name: str):
     print("Here are your {0} passwords: ".format(name))
@@ -65,19 +62,79 @@ def simple_pas_gen(chars: str, number_of_passwords: int, length: int, name: str)
         for y in range(length):
             password += random.choice(chars)
         print(password)
-
 # Find Middle of the element
-
-
-def middle(w_len):
+def perfect_middle(w_len):
     global mid
     mid = w_len / 2  # Find middle of the word
     if w_len % 2 > 0:  # Check if length of the word is odd number
         mid += 0.5
     mid = int(mid)
+#Place elements in the password
+def elements_password(name: str, length: int, list_char: int, password: str):
+  global location, w_len
+  print("""
+      Where would you like to place the """+name+"""s in the password?
+         1. All in front
+         2. All in back
+         3. All in middle
+         4. Random
+         5. Half in back half in front
+         6. After each letter
+         7. """+name+""" before each letter  
+    """)
+  location = check_int(location, "" )
+  password_length = len(password)
+  #Apply number settings
+  if location == 1: #Front
+    #Insert numbers in 0th index of the password
+    for x in range(length):
+      password = password[:0] + list_char[x] + password[0:]
+    print("Here is your password " + password)
+    return password
+  elif location == 2: #back
+    #Insert numbers in 0th index of the password
+    for x in range(length):
+      password = password[:password_length] + list_char[x] + password[password_length:]
+    print("Here is your password " + password)
+    return password
+  elif location == 3: #middle
+    perfect_middle(length)
+    #Insert numbers in 0th index of the password
+    #hoptop [:3] = hop, [3:] = top
+    for x in range(length):
+      password = password[:mid] + list_char[x] + password[mid:]
+    print("Here is your password " + password)
+    return password
+  elif location == 4:
+    for z in range (length):
+      rand=random.randint(0, password_length)
+      password = password[:rand] + list_char[z] + password[rand:]
+    print ("Password: " + password)
+    return password
+  elif location == 5:
+    perfect_middle(length)
+    for x in range(mid):
+      password = password [:0] + list_char[x] + password[0:]
+    password_length = len(password)
+    for z in range(mid, length):
+      password = password [:password_length] + list_char[z] + password[password_length:]
+    print ("Password: " + password)
+    return password
+  elif location == 6:
+    pos = 1
+    for x in range(length):
+      password = password [:pos] + list_char[x] + password [pos:]
+      pos += 2
+    print(password)
+    return password
+  elif location == 7:
+    pos = 0
+    for x in range(length):
+      password = password [:pos] + list_char[x] + password [pos:]
+      pos += 2
+    print(password)
+    return password
 # Application
-
-
 def run_app():
     global uppercase, lowercase, numbers, numchars, settings, available, special, pass_num, length
     # Settings
@@ -207,12 +264,13 @@ def run_app():
         # FLORIDA MAN CODE #############################################################################
         index = list()  # index of letters to change
         for x in range(uppercase):  # Loop through chars and randomly pick ones to change
-            var = random.randint(0, w_len - 1)
+            var = random.randint(0, w_len)
             # Pick random number and that number will be index of a char to change
             index.append(var)
         chan_word = list(word)
-        for i in index:  # Apply uppercase to the selected characters
-            chan_word[i] = chan_word[i].upper()
+        for i in range(uppercase):  # Apply uppercase to the selected characters
+            b = index[i]
+            chan_word[b] = chan_word[b].upper()
         password = "".join(chan_word)  # Convert from list back to string
         # FLORIDA MAN CODE ##############################################################################
         clear()
@@ -225,17 +283,6 @@ def run_app():
         if numbers > 100:
             while numbers > 100:
                 numbers = check_int(numbers, "Too much, Limit is 100")
-        print("""
-        Where would you like to place numbers in the password:
-            #1 All In the Front
-            #2 All In the Back
-            #3 All In the Middle
-            #4 Randomly Over the Password
-            #5 Half in the Back, Half in the Front
-            #6 Number after each letter
-            #7 Number in front of each letter
-        """)  # Evens after each letter, odds in front of each letter(SAM REMIND ME)
-        location = check_int(location, " ")
         num_chars = list()
         for q in range(numbers):
             num = random.choice(number_chars)  # Generate list of numbers
@@ -243,38 +290,23 @@ def run_app():
         print(num_chars)
         num_length = len(num_chars)
         # Apply Number Settings
-        if location == 1:  # Front
-            for q in range(num_length):
-                password = password[:0] + num_chars[q] + \
-                    password[0:]  # Insert numbers on the 0th index
-            print("Here is your password: " + password)
-        elif location == 2:  # Back
-            for u in range(num_length):
-                password = password[:w_len] + num_chars[u] + password[w_len:]
-            print("Here is your password: " + password)
-        elif location == 3:  # Middle
-            middle(w_len)  # Find middle of the word
-            for y in range(num_length):
-                password = password[:mid] + num_chars[y] + password[mid:]
-            print("Here is your password: " + password)
-        elif location == 4:  # Randomly
-            for z in range(num_length):
-                rand = random.randint(0, w_len)  # Generate Random Position
-                password = password[:rand] + num_chars[z] + password[rand:]
-            print("Here is your password: " + password)
-        elif location == 5:  # half
-            middle(num_length)  # Find the middle number
-            for b in range(mid):  # Loop until hit middle number
-                password = password[:0] + num_chars[b] + \
-                    password[0:]  # And place half in front
-            w_len = len(password)  # Update length of the word
-            for a in range(mid, num_length):  # Loop from middle to the end
-                password = password[:w_len] + num_chars[a] + password[w_len:]
-            print("Here is your password: " + password)
-        elif location == 6:  # after
-            print("6")
-        elif location == 7:  # front
-            print("7")
-
+        password = elements_password("Number", num_length, num_chars, password) 
+        print("Password so far: " + password)
+        print("Length of the password: %s" % w_len)
+        print("Uppercase characters: %s " % uppercase)
+        print("Numbers in password: %s " % num_length)
+        #Special characters
+        numspecial= check_int(numchars, "How many special characters would you like?")
+        #After determining number of special characters, ask for each one
+        for x in range(numspecial):
+            counter = x+1
+            signs = input("Input your Number " +str(counter) + " special character: ")
+            special.append(signs)
+        #Add Special Chars
+        password = elements_password("Special character", numspecial, special, password)
+        print("Finished Password: " + password)
+        input("Press Enter to Continue")
+        clear()
+        run_app()
 
 run_app()
